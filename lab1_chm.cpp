@@ -1,10 +1,41 @@
-﻿
+﻿#include <iostream>
+#include <cmath>
+#include <vector>
+double pi = acos(-1);
 
-#include <iostream>
+double func1(double x) {
+    return x * x * cos(pi * x);
+}
+
+void grid_step(double a, double b, int n) {
+    double h = (b - a) / n;
+
+    std::vector<double> x(n + 1);
+
+    x[0] = a;
+    x[n] = b;
+
+    for (int i = 0; i < n; ++i) {
+        x[i+1] = x[i] + h;
+    }
+    for (int i = 0; i <= n; ++i) {
+        std::cout << x[i]<< " ";
+    }
+}
+
+
+
+
+
 
 int main()
 {
     std::cout << "Hello World!\n";
+
+    double a = 0;
+    double b = 1.5;
+    grid_step(a, b, 15);
+
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
