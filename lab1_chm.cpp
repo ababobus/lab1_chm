@@ -41,7 +41,7 @@ double laGrange(double* x, double X, int n)//x-массив будет огро�
             }
         }
 
-        L = L + func1(x[i]) * Pr;
+        L += func1(x[i]) * Pr;
     }
     return L;
 }
@@ -58,15 +58,25 @@ int main()
 
     double* first = grid_step(a, b, n);//ёмкость n+1
     
-    double* res1 = new double[n+1]; //n+1
+    double* res1 = new double[n + 1]; 
+    double* res2 = new double[n + 1];
+
     for (int i = 0; i <= n; ++i) {
         res1[i] = func1(first[i]);
     }
+    /*for (int i = 0; i <= n; ++i) {
+        res1[i] = laGrange(&first[i], first[i], n);
+    }*/
 
     for (int i = 0; i <= 2; ++i) {
         std::cout << res1[i] << " ";
 
     }
+    std::cout << "\n";
+    /*for (int i = 0; i <= 2; ++i) {
+        std::cout << res2[i] << " ";
+    }*/
+    std::cout << laGrange(&first[2], first[2], n);
     std::cout << "\n";
     for (int i = 0; i <= 2; ++i) {
         std::cout << first[i] << " ";
