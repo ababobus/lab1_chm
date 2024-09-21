@@ -43,7 +43,7 @@ double laGrange(double* x, double X, int n)//x-массив будет огро�
 
         L += func1(x[i]) * Pr;
     }
-    return L;
+    return L;//многочлен
 }
 
 
@@ -54,33 +54,38 @@ int main()
 
     double a = 0;
     double b = 1.5;
-    int n = 2;
+    int n = 15;
 
-    double* first = grid_step(a, b, n);//ёмкость n+1
+    double* x = grid_step(a, b, n);//ёмкость n+1
     
     double* res1 = new double[n + 1]; 
     double* res2 = new double[n + 1];
 
     for (int i = 0; i <= n; ++i) {
-        res1[i] = func1(first[i]);
+        res1[i] = func1(x[i]);
     }
-    /*for (int i = 0; i <= n; ++i) {
-        res1[i] = laGrange(&first[i], first[i], n);
-    }*/
+    for (int i = 0; i <= n; ++i) {
+        res2[i] = laGrange(x, x[i], n);
+    }
 
-    for (int i = 0; i <= 2; ++i) {
-        std::cout << res1[i] << " ";
+    for (int i = 0; i <= n; ++i) {
+        std::cout << std::setprecision(20) << res1[i] << " ";
 
     }
     std::cout << "\n";
-    /*for (int i = 0; i <= 2; ++i) {
-        std::cout << res2[i] << " ";
-    }*/
-    std::cout << laGrange(&first[2], first[2], n);
+    for (int i = 0; i <= n; ++i) {
+        std::cout << std::setprecision(20) << res2[i] << " ";
+    }
     std::cout << "\n";
-    for (int i = 0; i <= 2; ++i) {
-        std::cout << first[i] << " ";
+    //std::cout << std::setprecision(9) << laGrange(x, x[2], n);
+    std::cout << "\n";
+    for (int i = 0; i <= n; ++i) {
+        std::cout << abs(func1(x[i]) - laGrange(x, x[i], n)) << "\n";
+    }
+    std::cout << "\n";
+    for (int i = 0; i <= n; ++i) {
+        std::cout << x[i] << " ";
 
     }
-    //delete[]first;
+    //delete[]x;
 }
