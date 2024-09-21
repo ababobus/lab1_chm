@@ -4,9 +4,12 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+//double pi = cos(-1);
 
 double func1(double x) {
-    return x * x * cos(M_PI * x);
+    double buf1 = M_PI * x;
+    double buf2 = cos(buf1);
+    return x * x * buf2;
 }
 
 double* grid_step(double a, double b, int n) {
@@ -27,12 +30,12 @@ double* grid_step(double a, double b, int n) {
 
 }
 
-double laGrange(double* x, double X, int n)//x-массив будет огромный
+double laGrange(double* x, double X, int n)
 {
-    double L = 0;
+    double L = 0.0;
     for (int i = 0; i <= n; i++)
     {
-        double Pr = 1;
+        double Pr = 1.0;
         for (int j = 0; j <= n; j++)
         {
             if (i != j)
@@ -43,7 +46,7 @@ double laGrange(double* x, double X, int n)//x-массив будет огро�
 
         L += func1(x[i]) * Pr;
     }
-    return L;//многочлен
+    return L;
 }
 
 
@@ -52,9 +55,9 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    double a = 0;
+    double a = 0.0;
     double b = 1.5;
-    int n = 15;
+    int n = 2;
 
     double* x = grid_step(a, b, n);//ёмкость n+1
     
@@ -69,23 +72,28 @@ int main()
     }
 
     for (int i = 0; i <= n; ++i) {
-        std::cout << std::setprecision(20) << res1[i] << " ";
+        std::cout << std::setprecision(15) << res1[i] << " ";
 
     }
     std::cout << "\n";
     for (int i = 0; i <= n; ++i) {
-        std::cout << std::setprecision(20) << res2[i] << " ";
+        std::cout << std::setprecision(15) << res2[i] << " ";
     }
     std::cout << "\n";
+
     //std::cout << std::setprecision(9) << laGrange(x, x[2], n);
     std::cout << "\n";
     for (int i = 0; i <= n; ++i) {
-        std::cout << abs(func1(x[i]) - laGrange(x, x[i], n)) << "\n";
+        std::cout << func1(x[i]) - laGrange(x, x[i], n) << "\n";
     }
     std::cout << "\n";
     for (int i = 0; i <= n; ++i) {
         std::cout << x[i] << " ";
 
     }
+    std::cout << "\n";
+    std::cout << cos(3.14 / 2 * 3)<<"\n";
+    std::cout << func1(0.5);
+    
     //delete[]x;
 }
