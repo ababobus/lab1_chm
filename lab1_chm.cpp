@@ -92,8 +92,6 @@ int main()
 
     }
     std::cout << "\n";
-    std::cout << cos(3.14 / 2 * 3)<<"\n";
-    std::cout << func1(0.5);
     
     //delete[]x;
 }
