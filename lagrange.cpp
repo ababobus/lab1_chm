@@ -9,8 +9,7 @@ double func1(double x) {
 
 double* grid_step(double a, double b, int n) {
     double h = (b - a) / n;
-    //std::vector<double> x(n + 1);
-    double* x = new double[n + 1]; //make_unique?
+    double* x = new double[n + 1]; 
 
     x[0] = a;
     x[n] = b;
@@ -18,9 +17,6 @@ double* grid_step(double a, double b, int n) {
     for (int i = 0; i < n; ++i) {
         x[i + 1] = x[i] + h;
     }
-    /*for (int i = 0; i <= n; ++i) {
-        std::cout << x[i]<< " ";
-    }*/
     return x;
 
 }
@@ -69,14 +65,14 @@ int main()
 
     double a = 0;
     double b = 1.5;
-    int n = 15;
     
 
     std::ofstream dataFile("lagrange_data.dat");
     for (int n = 1; n <= 15; n++) {
-        double* x = grid_step(a, b, n); 
+        double* x = grid_step(a, b, n); //аргументы генерируем
 
-        for (double X = a; X <= b; X += 0.01) {
+
+        for (double X = a; X <= b; X += (b-a)/n) {
             double Y = laGrange(x, X, n);
             dataFile << X << " " << Y << " " << n << "\n";
         }
@@ -84,8 +80,6 @@ int main()
         delete[] x; 
     }
     dataFile.close();
-    //std::cout << laGrange(x, x[2], 2);
-
 
     std::ofstream gnuplot("sd.gp");
     gnuplot << "set title 'График интерполяции Лагранжа'\n";
@@ -94,10 +88,10 @@ int main()
     gnuplot << "set grid\n";
     gnuplot << "set xrange [0:1.5]\n";
     gnuplot << "set yrange [-2:1]\n";
-    gnuplot << "set pointsize 2\n";
 
-    gnuplot << "plot for [i=0:14] 'lagrange_data.dat' index i title sprintf('lagrange(%d)', i) with lines lw 2 lc i+1\n";
-    gnuplot.close();
+    for (int i = 0; i < 15; ++i) {
+        gnuplot<< "plot 'lagrange_data.dat' title 'lagrange(" << i << ")' with lines lw 2 lc " << i+1 << std::endl;
+    }
 
     gnuplot.close();
     system("gnuplot -p sd.gp");
