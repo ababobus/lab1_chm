@@ -63,16 +63,21 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    double a = 0;
+    double a = 0.0;
     double b = 1.5;
     
+    std::ifstream infile("lagrange_data.dat");
+    if (!infile.good()) {
+        std::cerr << "Ошибка: файл lagrange_data.dat не найден или пуст." << std::endl;
+        return 1;
+    }
 
     std::ofstream dataFile("lagrange_data.dat");
     for (int n = 1; n <= 15; n++) {
         double* x = grid_step(a, b, n); //аргументы генерируем
 
 
-        for (double X = a; X <= b; X += (b-a)/n) {
+        for (double X = a; X <= b; X += (b - a) / n) {
             double Y = laGrange(x, X, n);
             dataFile << X << " " << Y << " " << n << "\n";
         }
@@ -87,12 +92,28 @@ int main()
     gnuplot << "set ylabel 'y'\n";
     gnuplot << "set grid\n";
     gnuplot << "set xrange [0:1.5]\n";
-    gnuplot << "set yrange [-2:1]\n";
+    gnuplot << "set yrange [-1.5:0.5]\n";
 
-    for (int i = 0; i < 15; ++i) {
-        gnuplot<< "plot 'lagrange_data.dat' title 'lagrange(" << i << ")' with lines lw 2 lc " << i+1 << std::endl;
+   /* gnuplot << "plot ";
+    for (int i = 1; i <= 15; ++i) {
+        if (i > 1) {
+            gnuplot<< ", " << std::endl;
+        }
+        gnuplot << "'lagrange_data.dat' index " << i - 1 << " title 'lagrange(" << i << ")' with lines lw 1 lc " << i;
+    }*/
+    /*std::string colors[] = { "red", "blue", "green", "orange", "purple",
+                            "cyan", "magenta", "brown", "pink",
+                            "yellow", "black", "violet", "seagreen",
+                            "gold", "navy", "darkgreen" };*/
+
+    
+    gnuplot << "plot ";
+    for (int i = 1; i <= 15; ++i) {
+        gnuplot << "'lagrange_data.dat' using 1:" << i + 1 << " with lines title 'lagrange(" << i << "), ";
     }
+    
 
+    gnuplot << "\n";
     gnuplot.close();
     system("gnuplot -p sd.gp");
     //delete[]x;
