@@ -2,9 +2,7 @@
 //double pi = cos(-1);
 
 double func1(double x) {
-    double buf1 = M_PI * x;
-    double buf2 = cos(buf1);
-    return x * x * buf2;
+    return x * x * cos(M_PI*x);
 }
 
 double* grid_step(double a, double b, int n) {
@@ -39,9 +37,9 @@ double laGrange(double* x, double X, int n)
     return L;
 }
 
-/*double Newton(double* x, double X, int n)
+double Newton(double* x, double X, int n)
 {
-    double y[16];
+    double y[15+1];
     for (int i = 0; i <= n; i++)
         y[i] = func1(x[i]);
     double Pr = 1;
@@ -56,7 +54,7 @@ double laGrange(double* x, double X, int n)
         newton = Pr * y[0] + newton;
     }
     return newton;
-}*/
+}
 
 
 int main()
@@ -65,6 +63,7 @@ int main()
     std::ofstream dataFile;
     double a = 0.0;
     double b = 1.5;
+    double* x = grid_step(a, b, 15);
 
     
     for (int n = 1; n <= 15; n++) {
@@ -81,50 +80,67 @@ int main()
     }
      
 
-    dataFile.open("lagrange_deltaN.txt"); //ошибка приближения
-    int c = 100000;
-    double h = (b - a) / c;
+    dataFile.open("lagrange_deltaN.txt"); //ошибка приближения для каждого н
     int N0 = 0; 
-    double* x = grid_step(a, b, 15);
     for (int n = 1; n <= 15; n++)
     {
         double delta = 0;
-        double sdelta = 0;
-        for (double i = a; i <= b; i += h)
+        double maxdelta = 0;
+        for (double i = a; i <= b; i += (b-a)/1e5)
         {
             delta = abs(func1(i) - laGrange(x, i, n));
-            if (sdelta < delta)
+            if (delta > maxdelta)
             {
-                sdelta = delta;
+                maxdelta = delta;
                 N0 = n;
             }
         }
-        //std::cout << "delta[" << n << "] = " << sdelta << std::endl;
-        dataFile << sdelta << std::endl;
+        //std::cout << "delta[" << n << "] = " << maxdelta << std::endl;
+        dataFile << maxdelta << std::endl;
     }
     dataFile.close();
 
     dataFile.open("laGrangeN0.txt");//Лагранж для оптимального n 
-    for (double i = a; i <= b; i += (b - a) / N0)
+    for (double i = a; i <= b; i += (b - a) / 15)
     {
+        
+        dataFile << laGrange(x, i, 15) << std::endl;
         //std::cout << "L[" << i << "] = " << laGrange(x, i, N0) << std::endl;
-        dataFile << laGrange(x, i, N0) << std::endl;
     }
     dataFile.close();
+
+
 
     dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем и исходной функции
-    for (double i = a; i <= b; i += (b - a) / N0)
+    for (double i = a; i <= b; i += (b - a) / 15)
     {
-        dataFile << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
+        dataFile << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
+        std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
     }
     dataFile.close();
 
+    dataFile.open("newtonN0.txt");//ньютон для оптимального N0
+    double* newt = new double[16];
+    for (int n = 1; n <= 15; n++)
+    {
+        newt[n] = Newton(x, x[n], 15);
+        dataFile << x[n] << " " << newt[n] << std::endl;
+        //std::cout << "Newton[" << n << "] = " << newt[n] << std::endl;
+    }
+    dataFile.close();
 
+    dataFile.open("newtonErrN0.txt");//Ошибка приближения Ньютона для оптимального н
+    for (double i = a; i <= b; i += (b - a) / 15)
+    {
+        dataFile << abs(func1(i) - Newton(x, i, 15)) << std::endl;
+        //std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, N0)) << std::endl;
+    }
+    dataFile.close();
 
 
     std::ofstream gnuplot("sd.gp");
     gnuplot << "set grid\n";
-    gnuplot << "set title 'График интерполяции Лагранжа'\n";
+    /*gnuplot << "set title 'График интерполяции Лагранжа'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'y'\n";
     gnuplot << "set xrange [0:1.5]\n";
@@ -137,7 +153,7 @@ int main()
     gnuplot << "plot ";
     for (int i = 1; i <= 15; ++i) {
         gnuplot << "'lagrange_data_" << i << ".txt' using 1:2 with lines title 'lagrange(" << i << ")',";
-    }
+    }*/
     
     
     /*gnuplot << "set title 'Ошибка приближения'\n";
@@ -149,15 +165,29 @@ int main()
 
     /*gnuplot << "set title 'Лагранж от N0'\n";
     gnuplot << "set xlabel 'x'\n";
-    gnuplot << "set ylabel 'L(x)'\n";
-    gnuplot << "set xrange [0:15]\n";
-    gnuplot << "plot 'laGrangeN0.txt' with lines title 'Lagrange Interpolation N0'\n";
-    gnuplot << "plot with lines title 'func1'";*/
+    gnuplot << "set ylabel 'LaGrange(x)'\n";
+    gnuplot << "set xrange [0:1.5]\n";
+    gnuplot << "set yrange [-1.25:0.25]\n";
+    gnuplot << "plot 'laGrangeN0.txt' with lines title 'Lagrange Interpolation N0' lc rgb 'blue' \n";*/
+    //gnuplot << "plot 'func1_dat.txt' using 1:2 with lines title 'y(x) = x*x*cos(pi*x)' lc rgb 'red' \n"; два графика в один сливаются
 
-    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем'\n";//разница на узлах с исх функцией = 0
+    gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем'\n";//разница на узлах с исх функцией = 0
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Ошибка'\n";
-    gnuplot << "plot 'laGrangeErrN0.txt' with lines title 'Ошибка приближения'\n";*/
+    gnuplot << "plot 'laGrangeErrN0.txt' with lines title 'y(x) - L(x)'\n";
+    
+    /*gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
+    gnuplot << "set xlabel 'x'\n";
+    gnuplot << "set ylabel 'Newton(x)'\n";
+    gnuplot << "set xrange [0:1.5]\n";
+    gnuplot << "set yrange [-1.25:0.25]\n";
+    gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";*/
+
+    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Ньютон'\n";
+    gnuplot << "set xlabel 'x'\n";
+    gnuplot << "set ylabel 'Ошибка'\n";\
+    gnuplot << "set yrange [-0.5e-15:1.7e-15]\n";
+    gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";*/
     
     gnuplot.close();
     system("gnuplot -p sd.gp");
