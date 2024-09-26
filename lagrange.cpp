@@ -57,6 +57,7 @@ double Newton(double* x, double X, int n)
 }
 
 
+
 int main()
 {
     std::cout << "Hello World!\n";
@@ -95,15 +96,14 @@ int main()
                 N0 = n;
             }
         }
-        //std::cout << "delta[" << n << "] = " << maxdelta << std::endl;
+        std::cout << "delta[" << n << "] = " << maxdelta << std::endl;
         dataFile << maxdelta << std::endl;
     }
     dataFile.close();
 
     dataFile.open("laGrangeN0.txt");//Лагранж для оптимального n 
     for (double i = a; i <= b; i += (b - a) / 15)
-    {
-        
+    {        
         dataFile << laGrange(x, i, 15) << std::endl;
         //std::cout << "L[" << i << "] = " << laGrange(x, i, N0) << std::endl;
     }
@@ -115,7 +115,7 @@ int main()
     for (double i = a; i <= b; i += (b - a) / 15)
     {
         dataFile << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
-        std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
+        //std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
     }
     dataFile.close();
 
@@ -136,6 +136,56 @@ int main()
         //std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, N0)) << std::endl;
     }
     dataFile.close();
+
+
+    //задание 2
+
+    double* cx = new double[16];
+    double* cy = new double[16];
+    for (int i = 0; i < N0; i++)//узлы по Чебушеву
+    {
+        cx[i] = ((b + a) / 2) + ((b - a) / 2) * (cos((M_PI * (2 * i + 1)) / (2 * N0)));
+        cy[i] = func1(x[i]);
+    }
+
+    dataFile.open("chebyshev_lagrange.txt");//многочлен лагранжа степени н0 по узлам чебышева
+    for (int i = 0; i < N0; i++)
+    {
+        std::cout << " x = " << cx[i] << ", y(x) = " << cy[i] << ", L" << laGrange(x, x[i], N0) << std::endl;
+        dataFile << laGrange(x, x[i], N0) << std::endl;
+    }
+    dataFile.close();
+
+    
+    dataFile.open("chebyshev_deltaN0.txt");//оценка погрешности приближения дельта н0
+    int max = 0;
+    for (int n = 1; n <= 15; n++)
+    {
+        double maxdelta = 0;
+        double delta = 0;
+
+        for (double i = a; i <= b; i += (b - a) / 1e5)
+        {
+            delta = abs(func1(i) - laGrange(x, i, 15));
+            if (delta>maxdelta)
+            {
+                maxdelta = delta;
+            }
+        }
+        
+        std::cout << "delta[" << n << "] = " << maxdelta << std::endl; 
+        dataFile << n << " " << maxdelta << std::endl;
+    }
+    dataFile.close();
+
+    dataFile.open("cheb_lagrange_grid.txt");//сравнение двух многочленов Лагранжа Ln0(x) на равномерной и неравномерной сетках
+    for (double i = a; i <= b; i += (b - a) / 15)
+    {
+        dataFile << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
+    }
+    dataFile.close();
+
+
 
 
     std::ofstream gnuplot("sd.gp");
