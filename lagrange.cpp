@@ -81,7 +81,7 @@ int main()
     }
      
 
-    dataFile.open("deltaN.txt"); //ошибка приближения
+    dataFile.open("lagrange_deltaN.txt"); //ошибка приближения
     int c = 100000;
     double h = (b - a) / c;
     int N0 = 0; 
@@ -124,7 +124,7 @@ int main()
 
     std::ofstream gnuplot("sd.gp");
     gnuplot << "set grid\n";
-    /*gnuplot << "set title 'График интерполяции Лагранжа'\n";
+    gnuplot << "set title 'График интерполяции Лагранжа'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'y'\n";
     gnuplot << "set xrange [0:1.5]\n";
@@ -137,7 +137,7 @@ int main()
     gnuplot << "plot ";
     for (int i = 1; i <= 15; ++i) {
         gnuplot << "'lagrange_data_" << i << ".txt' using 1:2 with lines title 'lagrange(" << i << ")',";
-    }*/
+    }
     
     
     /*gnuplot << "set title 'Ошибка приближения'\n";
