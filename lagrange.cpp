@@ -12,7 +12,7 @@ double* grid_step(double a, double b, int n) {
     double* x = new double[n + 1]; 
 
     x[0] = a;
-    x[n] = b;
+    //x[n] = b;
 
     for (int i = 0; i < n; ++i) {
         x[i + 1] = x[i] + h;
@@ -66,8 +66,9 @@ int main()
     double a = 0.0;
     double b = 1.5;
 
-    dataFile.open("lagrange_data.txt"); //интерполяиця лагранжа
+    
     for (int n = 1; n <= 15; n++) {
+        dataFile.open("lagrange_data_" + std::to_string(n) + ".txt"); //интерполяиця лагранжа
         double* x = grid_step(a, b, n); 
 
         for (double X = a; X <= b; X += (b - a) / n) {
@@ -76,8 +77,9 @@ int main()
         }
         dataFile << "\n";
         delete[] x;
+        dataFile.close();
     }
-    dataFile.close();
+    
 
     dataFile.open("deltaN.txt"); //ошибка приближения
     int c = 100000;
