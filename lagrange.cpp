@@ -79,7 +79,7 @@ int main()
         delete[] x;
         dataFile.close();
     }
-    
+     
 
     dataFile.open("deltaN.txt"); //ошибка приближения
     int c = 100000;
@@ -99,7 +99,7 @@ int main()
                 N0 = n;
             }
         }
-        //std::cout << "Delta[" << n << "] = " << sdelta << std::endl;
+        //std::cout << "delta[" << n << "] = " << sdelta << std::endl;
         dataFile << sdelta << std::endl;
     }
     dataFile.close();
@@ -112,11 +112,10 @@ int main()
     }
     dataFile.close();
 
-    dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем 
+    dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем и исходной функции
     for (double i = a; i <= b; i += (b - a) / N0)
     {
-        dataFile << abs(func1(i) - laGrange(x, i, N0)) << std::endl;//погрешность 
-        std::cout << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
+        dataFile << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
     }
     dataFile.close();
 
@@ -125,30 +124,37 @@ int main()
 
     std::ofstream gnuplot("sd.gp");
     gnuplot << "set grid\n";
-    //gnuplot << "set title 'График интерполяции Лагранжа'\n";
-    //gnuplot << "set xlabel 'x'\n";
-    //gnuplot << "set ylabel 'y'\n";
-    //gnuplot << "set xrange [0:1.5]\n";
-    //gnuplot << "set yrange [-1.5:0.5]\n";
-    /*gnuplot << "plot ";
-    for (int i = 0; i < 15; ++i) {
-        gnuplot << "'lagrange_data.dat' using 1:" << i + 2 << " with lines title 'lagrange(" << i << "), ";
+    /*gnuplot << "set title 'График интерполяции Лагранжа'\n";
+    gnuplot << "set xlabel 'x'\n";
+    gnuplot << "set ylabel 'y'\n";
+    gnuplot << "set xrange [0:1.5]\n";
+    gnuplot << "set yrange [-1.25:0.25]\n";
+    gnuplot << "set key outside\n";
+    gnuplot << "set lmargin 1\n";
+    gnuplot << "set rmargin 23\n";
+    gnuplot << "set bmargin 2\n";
+    gnuplot << "set tmargin 2\n";
+    gnuplot << "plot ";
+    for (int i = 1; i <= 15; ++i) {
+        gnuplot << "'lagrange_data_" << i << ".txt' using 1:2 with lines title 'lagrange(" << i << ")',";
     }*/
+    
     
     /*gnuplot << "set title 'Ошибка приближения'\n";
     gnuplot << "set ylabel 'n'\n";
-    gnuplot << "set ylabel 'Delta'\n";
+    gnuplot << "set ylabel 'delta n'\n";
     gnuplot << "set xrange [0:15]\n";
     gnuplot << "set yrange [-1:15]\n";
-    gnuplot << "plot 'deltaN.txt' with lp title 'Delta'\n";*/
+    gnuplot << "plot 'deltaN.txt' with lp title 'delta n'\n";*/
 
-    /*gnuplot << "set title 'Лагранж от n оптимального'\n";
+    /*gnuplot << "set title 'Лагранж от N0'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'L(x)'\n";
     gnuplot << "set xrange [0:15]\n";
-    gnuplot << "plot 'laGrangeN0.txt' with lines title 'Lagrange Interpolation'\n";*/
+    gnuplot << "plot 'laGrangeN0.txt' with lines title 'Lagrange Interpolation N0'\n";
+    gnuplot << "plot with lines title 'func1'";*/
 
-    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем'\n";//по нулям
+    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем'\n";//разница на узлах с исх функцией = 0
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Ошибка'\n";
     gnuplot << "plot 'laGrangeErrN0.txt' with lines title 'Ошибка приближения'\n";*/
