@@ -1,6 +1,6 @@
 set grid
-set title 'Ошибка приближения для оптимального N0 Ньютон'
+set title 'РАзница значений Лагранжа на равномерной и неравномерной сетке'
 set xlabel 'x'
-set ylabel 'Ошибка'
-set yrange [-0.5e-15:1.7e-15]
-plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'
+set xrange [0:1.5]
+set ylabel 'y'
+plot 'cheb_lagrange_grid.txt' with lines title '(LN0(cx)) - LN0(x))'
