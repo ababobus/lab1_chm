@@ -10,8 +10,6 @@ double* grid_step(double a, double b, int n) {
     double* x = new double[n + 1]; 
 
     x[0] = a;
-    //x[n] = b;
-
     for (int i = 0; i < n; ++i) {
         x[i + 1] = x[i] + h;
     }
@@ -96,12 +94,12 @@ int main()
                 N0 = n;
             }
         }
-        std::cout << "delta[" << n << "] = " << maxdelta << std::endl;
+        //std::cout << "delta[" << n << "] = " << maxdelta << std::endl;
         dataFile << maxdelta << std::endl;
     }
     dataFile.close();
 
-    dataFile.open("laGrangeN0.txt");//Лагранж для оптимального n 
+    dataFile.open("laGrangeN0.txt");//Лагранж для оптимального N0
     for (double i = a; i <= b; i += (b - a) / 15)
     {        
         dataFile << laGrange(x, i, 15) << std::endl;
@@ -112,9 +110,9 @@ int main()
 
 
     dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем и исходной функции
-    for (double i = a; i <= b; i += (b - a) / 15)
+    for (double i = a; i <= b; i += (b - a) / 1e5-16) //тут стоит количество точек для интерполирования
     {
-        dataFile << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
+        dataFile << abs(func1(i) - laGrange(x, i, 15)) << std::endl; //тут стоит оптимальная степень 
         //std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, N0)) << std::endl;
     }
     dataFile.close();
@@ -130,10 +128,10 @@ int main()
     dataFile.close();
 
     dataFile.open("newtonErrN0.txt");//Ошибка приближения Ньютона для оптимального н
-    for (double i = a; i <= b; i += (b - a) / 15)
+    for (double i = a; i <= b; i += (b - a) / 1e5-15)
     {
         dataFile << abs(func1(i) - Newton(x, i, 15)) << std::endl;
-        //std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, N0)) << std::endl;
+        std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, 15)) << std::endl;
     }
     dataFile.close();
 
@@ -151,7 +149,7 @@ int main()
     dataFile.open("chebyshev_lagrange.txt");//многочлен лагранжа степени н0 по узлам чебышева
     for (int i = 0; i < N0; i++)
     {
-        std::cout << " x = " << cx[i] << ", y(x) = " << cy[i] << ", L" << laGrange(x, x[i], N0) << std::endl;
+        //std::cout << " x = " << cx[i] << ", y(x) = " << cy[i] << ", L" << laGrange(x, x[i], N0) << std::endl;
         dataFile << laGrange(x, x[i], N0) << std::endl;
     }
     dataFile.close();
@@ -173,7 +171,7 @@ int main()
             }
         }
         
-        std::cout << "delta[" << n << "] = " << maxdelta << std::endl; 
+        //std::cout << "delta[" << n << "] = " << maxdelta << std::endl; 
         dataFile << n << " " << maxdelta << std::endl;
     }
     dataFile.close();
@@ -233,11 +231,11 @@ int main()
     gnuplot << "set yrange [-1.25:0.25]\n";
     gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";*/
 
-    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Ньютон'\n";
+    gnuplot << "set title 'Ошибка приближения для оптимального N0 Ньютон'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Ошибка'\n";\
-    gnuplot << "set yrange [-0.5e-15:1.7e-15]\n";
-    gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";*/
+    //gnuplot << "set yrange [-0.5e-15:1.7e-15]\n";
+    gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";
     
     gnuplot.close();
     system("gnuplot -p sd.gp");
