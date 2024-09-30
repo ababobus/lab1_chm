@@ -116,27 +116,7 @@ int main()
         dataFile << i << " " << abs(func1(i) - laGrange(x, i, 15)) << std::endl; //тут стоит оптимальная степень 
         //std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
     }
-    dataFile.close();
-
-    //3.1
-    dataFile.open("newtonN0.txt");//ньютон для оптимального N0
-    double* newt = new double[16];
-    for (int n = 1; n <= 15; n++)
-    {
-        newt[n] = Newton(x, x[n], 15);
-        dataFile << x[n] << " " << newt[n] << std::endl;
-        //std::cout << "Newton[" << n << "] = " << newt[n] << std::endl;
-    }
-    dataFile.close();
-
-    //3.2 дофига считается
-    /*dataFile.open("newtonErrN0.txt");//Ошибка приближения Ньютона для оптимального н
-    for (double i = a; i <= b; i += (b - a) / (1e5-15))
-    {
-        dataFile << abs(func1(i) - Newton(x, i, 15)) << std::endl;
-        //std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, 15)) << std::endl;
-    }
-    dataFile.close();*/
+    dataFile.close();  
 
 
     //2.1
@@ -178,7 +158,7 @@ int main()
             }
         }
         
-        std::cout << "delta[" << n << "] = " << maxdelta << std::endl; 
+        //std::cout << "delta[" << n << "] = " << maxdelta << std::endl; 
         dataFile << maxdelta << std::endl;
     }
     dataFile.close();
@@ -195,6 +175,25 @@ int main()
     }
     dataFile.close();
 
+    //3.1
+    dataFile.open("newtonN0.txt");//ньютон для оптимального N0
+    double* newt = new double[16];
+    for (int n = 1; n <= 15; n++)
+    {
+        newt[n] = Newton(x, x[n], 15);
+        dataFile << x[n] << " " << newt[n] << std::endl;
+        //std::cout << "Newton[" << n << "] = " << newt[n] << std::endl;
+    }
+    dataFile.close();
+
+    //3.2 дофига считается
+    dataFile.open("newtonErrN0.txt");//Ошибка приближения Ньютона для оптимального н
+    for (double i = a; i <= b; i += (b - a) / (1e5 - 15))
+    {
+        dataFile << abs(func1(i) - Newton(x, i, 15)) << std::endl;
+        //std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, 15)) << std::endl;
+    }
+    dataFile.close();
 
 
 
@@ -240,24 +239,7 @@ int main()
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Ошибка'\n";
     gnuplot << "plot 'laGrangeErrN0.txt' with lines title 'y(x) - L(x)'\n";*/
-    
-
-    //3.1
-    /*gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
-    gnuplot << "set xlabel 'x'\n";
-    gnuplot << "set ylabel 'Newton(x)'\n";
-    gnuplot << "set xrange [0:1.5]\n";
-    gnuplot << "set yrange [-1.25:0.25]\n";
-    gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";*/
-
-
-    //3.2
-    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Ньютон'\n";
-    gnuplot << "set xlabel 'x'\n";
-    gnuplot << "set ylabel 'Ошибка'\n";
-    gnuplot << "set yrange [-0.5e-15:1.7e-15]\n";
-    gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";*/
-    
+       
 
     //2.3
     /*gnuplot << "set title 'Ошибка приближения Лагранжем на неравномерной сетке'\n";
@@ -268,11 +250,27 @@ int main()
     gnuplot << "plot 'chebyshev_deltaN.txt' with lines title 'delta n'\n";*/
 
     //2.4
-    gnuplot << "set title 'РАзница значений Лагранжа на равномерной и неравномерной сетке'\n";
+    /*gnuplot << "set title 'РАзница значений Лагранжа на равномерной и неравномерной сетке'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set xrange [0:1.5]\n";
     gnuplot << "set ylabel 'y'\n"; 
-    gnuplot << "plot 'cheb_lagrange_grid.txt' with lines title '(LN0(cx)) - LN0(x))'\n";
+    gnuplot << "plot 'cheb_lagrange_grid.txt' with lines title '(LN0(cx)) - LN0(x))'\n";*/
+
+
+
+    //3.1
+    /*gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
+    gnuplot << "set xlabel 'x'\n";
+    gnuplot << "set ylabel 'Newton(x)'\n";
+    gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";*/
+
+
+    //3.2
+    gnuplot << "set title 'Ошибка приближения для оптимального N0 Ньютон'\n";
+    gnuplot << "set xlabel 'x'\n";
+    gnuplot << "set ylabel 'Ошибка'\n";
+    //gnuplot << "set yrange [-0.5e-15:1.7e-15]\n";
+    gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";
 
     gnuplot.close();
     system("gnuplot -p sd.gp");
