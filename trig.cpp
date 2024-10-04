@@ -5,7 +5,7 @@ const double b = 1.5;
 
 
 
-
+/*
 int main() {
 	std::cout << "fqerfs";
 	std::ofstream dataFile;
@@ -13,4 +13,4 @@ int main() {
 	double b = 2.0 * M_PI;
 	return 0;
 
-}
+}*/
