@@ -1,21 +1,4 @@
 ﻿#include "Header.h"
-//double pi = cos(-1);
-
-double func1(double x) {
-    return x * x * cos(M_PI*x);
-}
-
-double* grid_step(double a, double b, int n) {
-    double h = (b - a) / n;
-    double* x = new double[n + 1]; 
-
-    x[0] = a;
-    for (int i = 1; i <= n; ++i) {
-        x[i] = x[i-1] + h;
-    }
-    return x;
-
-}
  
 double laGrange(double* x, double X, int n)
 {
@@ -57,7 +40,7 @@ double Newton(double* x, double X, int n)
 }
 
 
-
+/*
 int main()
 {
     std::cout << "Hello World!\n";
@@ -105,7 +88,7 @@ int main()
     dataFile.close();
     int N0 = 10;
 
-    /*
+    
     //1.4 
     dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем и исходной функции
     for (double i = a; i <= b; i += (b - a) / (1e5)) //тут стоит количество точек для интерполирования
@@ -113,7 +96,7 @@ int main()
         dataFile << i << " " << abs(func1(i) - laGrange(x, i, N0)) << std::endl; //тут стоит оптимальная степень 
         //std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
     }
-    dataFile.close();  */
+    dataFile.close();  
 
 
     //2.1
@@ -263,12 +246,12 @@ int main()
 
 
     //3.1
-    gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
+    /*gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Newton(x)'\n";
     //gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";
     gnuplot << "plot 'newtonN0.txt'  using 1:2 with lines title 'Newton(x)', 'newtonN0.txt' using 1:3 with lines title 'y(x)', \
-        'newtonN0.txt' using 1:4 with lines title 'lagrange(x)'\n";
+        'newtonN0.txt' using 1:4 with lines title 'lagrange(x)'\n";*/
 
 
     //3.2
@@ -279,7 +262,7 @@ int main()
     gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";*/
 
 
-    gnuplot.close();
-    system("gnuplot -p sd.gp");
+    //gnuplot.close();
+    //system("gnuplot -p sd.gp");
     
-}
+//}
