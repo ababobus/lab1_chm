@@ -16,6 +16,7 @@ double* grid_step(double a, double b, int n) {
     return x;
 
 }
+ 
 double laGrange(double* x, double X, int n)
 {
     double L = 0;
@@ -103,17 +104,8 @@ int main()
     }
     dataFile.close();
     int N0 = 10;
-    double* x = grid_step(a, b, N);
-    //1.3 не надо
-    dataFile.open("laGrangeN0.txt");//Лагранж для оптимального N0
-    for (double i = a; i <= b; i += (b - a) / (1e5-N))
-    {        
-        dataFile << laGrange(x, i, N0) << std::endl;
-        //std::cout << "L[" << i << "] = " << laGrange(x, i, N0) << std::endl;
-    }
-    dataFile.close();
 
-
+    /*
     //1.4 
     dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем и исходной функции
     for (double i = a; i <= b; i += (b - a) / (1e5)) //тут стоит количество точек для интерполирования
@@ -121,7 +113,7 @@ int main()
         dataFile << i << " " << abs(func1(i) - laGrange(x, i, N0)) << std::endl; //тут стоит оптимальная степень 
         //std::cout << "y[" << i << "] - L[" << i << "] = " << abs(func1(i) - laGrange(x, i, 15)) << std::endl;
     }
-    dataFile.close();  
+    dataFile.close();  */
 
 
     //2.1
@@ -131,7 +123,7 @@ int main()
     dataFile.open("chebyshev.txt");
     for (int i = 0; i <= N0-1; i++)//i = 0..n0-1
     {
-        cx[i] = ((b + a) / 2) + ((b - a) / 2) * (cos(M_PI * (2 * i + 1) / (2 * N0)));//2*N0=15
+        cx[i] = ((b + a) / 2) + ((b - a) / 2) * (cos(M_PI * (2 * i + 1) / (2 * N0)));
         cy[i] = func1(cx[i]);
         dataFile << cx[i] << " " << cy[i] << std::endl;
     }
@@ -139,68 +131,71 @@ int main()
 
     //2.2
     dataFile.open("chebyshev_lagrange.txt");//многочлен лагранжа степени н0 по узлам чебышева
-    for (int i = 0; i < N0; i++)//тут включительно или нет если точек по чебышеву 15 всего???
+    for (int i = 0; i < N; i++)
     {
-        //std::cout << " x = " << cx[i] << ", y(x) = " << cy[i] << ", L=" << laGrange(cx, cx[i], 15) << std::endl;
+        //std::cout << " x = " << cx[i] << " L = " << laGrange(cx, cx[i], 15) << std::endl;
         dataFile << cx[i] << " " << laGrange(cx, cx[i], N0) << std::endl;
     }
     dataFile.close();
 
     //2.3
     dataFile.open("chebyshev_deltaN.txt");//оценка погрешности приближения дельта н на неравномерной сетке
-    int max = 0;
-    for (int n = 0; n < N; n++)
+    double maxdelta = 0;
+    double delta = 0;
+    for (double i = a; i <= b; i += (b - a) / (1e5))
     {
-        double maxdelta = 0;
-        double delta = 0;
-
-        for (double i = a; i <= b; i += (b - a) / (1e5-15))
+        delta = abs(func1(i) - laGrange(cx, i, N0));
+        if (delta > maxdelta)
         {
-            delta = abs(func1(i) - laGrange(cx, i, n));
-            if (delta>maxdelta)
-            {
-                maxdelta = delta;
-            }
+            maxdelta = delta;
         }
-        
-        //std::cout << "delta[" << n << "] = " << maxdelta << std::endl; 
-        dataFile << maxdelta << std::endl;
     }
+
+    //std::cout << "delta[" << N0 << "] = " << maxdelta << std::endl;
+    dataFile << maxdelta << std::endl;
+
     dataFile.close();
 
-    //2.4 тут спросить
+    double* x = grid_step(a, b, N0);
 
+    //2.4
     dataFile.open("cheb_lagrange_grid.txt");//сравнение двух многочленов Лагранжа Ln0(x) на равномерной и неравномерной сетках
-    for (double i = 0.0; i <= 1.5; i += (b - a) / (1e5 - 15))
+    for (double i = 0.0; i <= 1.5; i += (b - a) / (1e5))
     {
-        //dataFile << abs(abs(func1(i) - laGrange(x, i, 15)) - abs(func1(i) - laGrange(cx, i, 15))) << std::endl;
-
-        //dataFile << (laGrange(cx, i, 15) - laGrange(x, i, 15)) << std::endl;
-        //std::cout << (laGrange(cx, i, 15) - laGrange(x, i, 14)) << std::endl;
-        dataFile << (func1(i) - laGrange(cx, i, 15)) << std::endl;
+        dataFile << i << " " << laGrange(x, i, 10) << " " << i << " " << laGrange(cx, i, 10) << std::endl;
     }
     dataFile.close();
+
+    //2.4.2
+    dataFile.open("cheb242.txt");
+    for (double i = a; i <= b; i += (b - a) / (1e5-15)) 
+    {
+        dataFile << i << " " << abs(func1(i) - laGrange(cx, i, N0)) << std::endl; 
+    }
+    dataFile.close();
+
 
     //3.1
     dataFile.open("newtonN0.txt");//ньютон для оптимального N0
-    double* newt = new double[16];
-    for (int n = 1; n <= N; n++)
+    double *nx = grid_step(a, b, 10);
+    double newt[11];
+    for (double i = a; i <= b; i+=(b-a)/1e5)
     {
-        newt[n] = Newton(x, x[n], N);
-        dataFile << x[n] << " " << newt[n] << std::endl;
+        double nt = Newton(nx, i, N0);
+        double lt = laGrange(nx, i, N0);
+        dataFile << i << " " << nt <<  " " << func1(i) << " " << lt << std::endl;
         //std::cout << "Newton[" << n << "] = " << newt[n] << std::endl;
     }
     dataFile.close();
 
     //3.2 
     dataFile.open("newtonErrN0.txt");//Ошибка приближения Ньютона для оптимального н
-    for (double i = a; i <= b; i += (b - a) / (1e5 - N))
+    for (double i = a; i <= b; i += (b - a) / (1e5 - N0))
     {
-        dataFile << abs(func1(i) - Newton(x, i, N0)) << std::endl;
+        dataFile << i << " " <<abs(func1(i) - Newton(x, i, N0)) << std::endl;
         //std::cout << "y[" << i << "] - N[" << i << "] = " << abs(func1(i) - Newton(x, i, 15)) << std::endl;
     }
     dataFile.close();
-
 
 
     std::ofstream gnuplot("sd.gp");
@@ -226,7 +221,7 @@ int main()
     /*gnuplot << "set title 'ошибка приближения лагранжем'\n";
     gnuplot << "set ylabel 'n'\n";
     gnuplot << "set ylabel 'delta n'\n";
-    //gnuplot << "set xrange [0:15]\n";
+    //gnuplot << "set xrange [1:15]\n";
     gnuplot << "set yrange [-0.1:1.3]\n";
     gnuplot << "plot 'lagrange_deltaN.txt' with lp title 'delta n'\n";*/
 
@@ -241,34 +236,39 @@ int main()
 
 
     //1.4
-    gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем'\n";//разница на узлах с исх функцией = 0
+    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем'\n";//разница на узлах с исх функцией = 0
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Ошибка'\n";
-    gnuplot << "plot 'laGrangeErrN0.txt' with lines title 'y(x) - L(x)'\n";
+    gnuplot << "plot 'laGrangeErrN0.txt' with lines title 'y(x) - L(x)'\n";*/
        
 
-    //2.3
+    //2.3 Не надо
     /*gnuplot << "set title 'Ошибка приближения Лагранжем на неравномерной сетке'\n";
     gnuplot << "set xlabel 'n'\n";
     gnuplot << "set ylabel 'delta n'\n";
-    gnuplot << "set xrange [0:15]\n";
-    gnuplot << "set yrange [-1:35]\n";
     gnuplot << "plot 'chebyshev_deltaN.txt' with lines title 'delta n'\n";*/
 
     //2.4
     /*gnuplot << "set title 'РАзница значений Лагранжа на равномерной и неравномерной сетке'\n";
     gnuplot << "set xlabel 'x'\n";
-    gnuplot << "set xrange [0:1.5]\n";
+    //gnuplot << "set xrange [0:1.5]\n";
     gnuplot << "set ylabel 'y'\n"; 
-    gnuplot << "plot 'cheb_lagrange_grid.txt' with lines title '(y(x) - LN0(cx))'\n";*/
+    gnuplot << "plot 'cheb_lagrange_grid.txt'  using 1:2 with lines title 'L n0(x)', 'cheb_lagrange_grid.txt' using 3:4 with lines title 'Ln0(cx)\n";*/
+
+    /*gnuplot << "set title 'Ошибка приближения для оптимального N0 Лагранжем на неравномерной сетке'\n";//разница на узлах с исх функцией = 0
+    gnuplot << "set xlabel 'x'\n";
+    gnuplot << "set ylabel 'Ошибка'\n";
+    gnuplot << "plot 'cheb242.txt' with lines title 'y(x) - L(cx)'\n"; */
 
 
 
     //3.1
-    /*gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
+    gnuplot << "set title 'Интерполяция Ньютона для N0'\n";
     gnuplot << "set xlabel 'x'\n";
     gnuplot << "set ylabel 'Newton(x)'\n";
-    gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";*/
+    //gnuplot << "plot 'newtonN0.txt' with lines title 'Newton(x)'\n";
+    gnuplot << "plot 'newtonN0.txt'  using 1:2 with lines title 'Newton(x)', 'newtonN0.txt' using 1:3 with lines title 'y(x)', \
+        'newtonN0.txt' using 1:4 with lines title 'lagrange(x)'\n";
 
 
     //3.2
@@ -277,6 +277,7 @@ int main()
     gnuplot << "set ylabel 'Ошибка'\n";
     //gnuplot << "set yrange [-0.5e-15:1.7e-15]\n";
     gnuplot << "plot 'newtonErrN0.txt' with lines title 'y(x) - Newton(x)'\n";*/
+
 
     gnuplot.close();
     system("gnuplot -p sd.gp");
