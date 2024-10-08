@@ -3,31 +3,36 @@
 const double A = 0;
 const double B = 1.5;
 
-double trig_interpol() {
-	for (int k = 1; k <= 15; ++k) {
-		double* t = new double[2 * k + 2];
-		t[0] = 0;
-		t[2 * k + 2] = 2 * M_PI;
-		
-		double a0 = 0;
+double trig_interpol(double t, double* X, double* g, int n) {
 
-		double a[15];
-		double b[15];
+	double A0 = 0;
+	double Ak = 0;
+	double Bk = 0;
+	double sum = 0;
+	double F = 0;
+	for (int i = 0; i < 2 * n + 1; i++)
+		sum += g[i];
 
-		double* x = grid_step(1, 2 * k + 1, 2 * k);
-		for (int i = 1; i <= 2 * k + 1; i++) {
-			t[i] = 2 * M_PI * (i - 1) / (2 * k + 1);
+	A0 = sum / (2 * n + 1);
+	F += A0;
 
-			a0 += func1(i);
-			a[k] += func1(i) * cos(k * x[i]);
-			b[k] += func1(i) * sin(k * x[i]);
+	for (int k = 1; k <= n; k++)
+	{
+		sum = 0;
+		for (int i = 0; i < 2 * n + 1; i++)
+			sum += g[i] * cos(k * X[i]);
 
-		}
-		a0 *= 1 / (2*k + 1);
-		a[k] *= 2 / (2 * k + 1);
-		b[k] *= 2 / (2 * k + 1);
+		Ak = 2 * sum / (2 * n + 1);
 
+		sum = 0;
+		for (int i = 0; i < 2 * n + 1; i++)
+			sum += g[i] * sin(k * X[i]);
+
+		Bk = 2 * sum / (2 * n + 1);
+		F += Ak * cos(k * t) + Bk * sin(k * t);
 	}
+
+	return F;
 
 }
 
@@ -35,9 +40,64 @@ double trig_interpol() {
 int main() {
 	std::cout << "Hello world 2";
 	std::ofstream dataFile;
+	std::ofstream dataFile2;
+	const int N = 10;
+	double a = 0;
+	double b = 2 * M_PI;
+	double c = 1e3;
 
-	double t1 = 0.0;
-	double t2 = 2.0 * M_PI;
+	dataFile.open("trig_delta.txt");
+	dataFile2.open("trig_graphic.txt");
+	for (int n = 1; n < 300; n++) {
+
+		double h = (b - a) / n;
+
+		double* t = new double[2 * n + 1];
+		double* g = new double[2 * n + 1];
+
+		for (int i = 0; i < 2 * n + 1; i++) {
+			t[i] = 2 * M_PI * (i) / (2 * n + 1);
+			g[i] = func1(t[i]);
+		}
+
+		double* t_rep = new double[c];
+		double step = (b - a) / c;
+		for (int i = 0; i < c - 1; i++)
+			t_rep[i] = a + step * i;
+
+		double MaxDelta = 0;
+		for (int i = 0; i < c - 1; i++) {
+			double delta = abs(trig_interpol(t_rep[i], t, g, n) - func1(t_rep[i]));//дельта 
+			if (n == 100)
+				dataFile2 << delta << std::endl;
+			if (delta > MaxDelta)
+				MaxDelta = delta;
+		}
+		std::cout << n % 10;
+		if (MaxDelta < 1e-6) {
+			std::cout << std::endl << "END\n" << "N = " << n << ", " << "  MaxDelta = " << MaxDelta << " < 2*10e3" << std::endl;
+			break;
+		}
+		if (n % 10 == 0)
+			std::cout << "\tN = " << n << ", " << "  MaxDelta = " << MaxDelta << std::endl;
+		dataFile << MaxDelta << std::endl;
+	}
+
+	dataFile.close();
+	dataFile2.close();
+
+
+	std::ofstream gnuplot("sd.gp");
+
+	gnuplot << "set grid\n";
+	//gnuplot << "set xrange [0:2*pi]\n";
+	gnuplot << "plot 'trig_graphic.txt' with lines title 'delta'\n";
+	//gnuplot << "plot 'trig1.txt'  with lines title 'g(t)'\n";
+
+
+	gnuplot.close();
+	system("gnuplot -p sd.gp");
+
 	return 0;
 
 }
