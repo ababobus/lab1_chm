@@ -129,12 +129,17 @@
   <ItemGroup>
     <ClCompile Include="lagrange.cpp" />
     <ClCompile Include="trig.cpp" />
+    <ClCompile Include="черновик.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sd.gp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="func_fnt.txt" />
+    <Text Include="func_gt.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
