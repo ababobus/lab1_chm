@@ -48,7 +48,7 @@ double Newton(double* x, double X, int n)
     {
         for (int i = 0; i <= n - j; i++)
         {
-            y[i] = (y[i + 1] - y[i]) / (x[i + j] - x[i]);//Формула связи
+            y[i] = (y[i + 1] - y[i]) / (x[i + j] - x[i]); //чем меньше степень тем больше игреков
         }
         Pr *= (X - x[j - 1]);
         newton = Pr * y[0] + newton;
@@ -107,6 +107,7 @@ int main()
 
     
     //1.4 
+    double *x = grid_step(a, b, N0);
     dataFile.open("laGrangeErrN0.txt");//ошибка приближения для оптимального N0 Лагранжем и исходной функции
     for (double i = a; i <= b; i += (b - a) / (1e5)) //тут стоит количество точек для интерполирования
     {
@@ -156,7 +157,6 @@ int main()
 
     dataFile.close();
 
-    double* x = grid_step(a, b, N0);
 
     //2.4
     dataFile.open("cheb_lagrange_grid.txt");//сравнение двух многочленов Лагранжа Ln0(x) на равномерной и неравномерной сетках

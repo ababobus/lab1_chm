@@ -21,7 +21,7 @@
     <ClCompile Include="trig.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="черновик.cpp">
+    <ClCompile Include="spline.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,9 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="func_fnt.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="func_gt.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>
