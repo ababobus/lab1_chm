@@ -1,7 +1,7 @@
 #include "Header.h"
 using namespace std;
 
-
+/*
 int main() {
 	double at = 0.0;
 	double bt = 2 * M_PI;
@@ -41,15 +41,15 @@ int main() {
 		double delta = 0;
 		double maxdelta = 0;
 		dataFile.open("func_fnt.txt");
-		for (double j = 0; j <= t[2*n+1]; j += 2 * M_PI / 1e5) { 
+		for (double j = 0; j <= t[2 * n + 1]; j += 2 * M_PI / 1e5) { //до t[2*n+1]
 			double fnt = A0;
 			for (int i = 1; i <= n; i++) {
 				fnt += ak[i] * cos(i * j) + bk[i] * sin(i * j);
 			}
-			double gt = func1(j);
-			delta = abs(fnt - gt);
+			//double gt = func1(j);
+			delta = abs(fnt - func1(j));
 			if (delta > maxdelta) maxdelta = delta;
-			dataFile << j << " " << fnt << " " << gt << "\n";
+			dataFile << j << " " << fnt << " " << func1(j) << "\n";
 		}
 		if (maxdelta <= 1e-6) {
 			index = n;
@@ -66,8 +66,8 @@ int main() {
 	gnuplot << "set grid\n";
 	gnuplot << "set xlabel 't'\n";
 
-	gnuplot << "set xrange [3:4]\n";
-	gnuplot << "set yrange [0:10]\n";
+	//gnuplot << "set xrange [3:4]\n";
+	//gnuplot << "set yrange [0:10]\n";
 	gnuplot << "set ylabel 'F(t)'\n";
 	gnuplot << "plot 'func_fnt.txt' using 1:2  with lines title 'fnt', 'func_fnt.txt' using 1:3 with lines title 'gt'  \n";
 
@@ -77,4 +77,4 @@ int main() {
 	//gnuplot << "plot 'func_fnt.txt' using 1:2 with lines title 'fnt', 'func_fnt.txt' using 1:3 with lines title 'gt'  \n";
 	gnuplot.close();
 	system("gnuplot -p sd.gp");
-}
+}*/
