@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="lagrange.cpp" />
     <ClCompile Include="spline.cpp" />
+    <ClCompile Include="spline_working.cpp" />
     <ClCompile Include="trig.cpp" />
   </ItemGroup>
   <ItemGroup>
