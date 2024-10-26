@@ -1,6 +1,15 @@
 ﻿Сборка начата…
 1>------ Сборка начата: проект: lab1_chm, Конфигурация: Debug x64 ------
-1>lagrange.cpp
+1>trig.cpp
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(15,27): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(28,24): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(29,24): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(38,7): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(39,7): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(48,15): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(48,36): warning C4244: аргумент: преобразование "double" в "const unsigned __int64", возможна потеря данных
+1>C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\trig.cpp(56,12): warning C4244: =: преобразование "double" в "int", возможна потеря данных
 1>lab1_chm.vcxproj -> C:\Users\79825\source\repos\5 semester\CH M\LAB1\lab1_chm\x64\Debug\lab1_chm.exe
+1>Сборка проекта "lab1_chm.vcxproj" завершена.
 ========== Сборка: успешно выполнено — 1 , со сбоем — 0, в актуальном состоянии — 0, пропущено — 0 ==========
-========== Сборка запущено в 8:10 PM, заняло 02,755 с ==========
+========== Сборка запущено в 10:10 PM, заняло 01,159 с ==========

@@ -3,7 +3,7 @@ using namespace std;
 const double a = 0.0;
 const double b = 1.5;
 
-*/
+
 void makeCoefficientsForPolynomial(std::vector<double>& coord_X, std::vector<double>& coord_Y, int N, std::vector<double>& a_i, std::vector<double>& b_i, std::vector<double>& c_i,
 	std::vector<double>& d_i)
 {
@@ -55,16 +55,13 @@ void makeCoefficientsForProgonka(std::vector<double>& a_p, std::vector<double>& 
 
 /*
 int main() {
-
-	
 	int N = 38;
-
 	ofstream dataFile;
 	double h = (b - a) / N;
 
 	std::vector<double> coord_X, coord_Y;
-	std::vector<double> a_i, b_i, c_i, d_i(N + 2, 0);
-	std::vector<double> a_p, b_p, c_p, d_p(N + 2, 0);
+	std::vector<double> a_i(N + 2, 0), b_i(N + 2, 0), c_i(N + 2, 0), d_i(N + 2, 0);
+	std::vector<double> a_p(N + 2, 0), b_p(N + 2, 0), c_p(N + 2, 0), d_p(N + 2, 0);
 	
 	for (size_t i = 0; i <= N; i++)
 	{
@@ -81,8 +78,6 @@ int main() {
 	for (size_t i = 2; i <= N; ++i)
 	{
 		std::vector<double>polynomial_Y;
-		
-
 		double x_i_prev = a + (i - 1) * h;
 		for (size_t j = 0; j <= 1e3; ++j)
 		{
@@ -90,9 +85,21 @@ int main() {
 			coord_X.push_back(x_j);
 			polynomial_Y.push_back(a_i[i] + b_i[i] * (x_j - x_i_prev) + c_i[i] * pow((x_j - x_i_prev), 2) + d_i[i] * pow((x_j - x_i_prev), 3));
 			coord_Y.push_back(func1(x_j));
-			cout << coord_X[j] << " " << polynomial_Y[j] << endl;
-			dataFile << coord_X[j] << " " << coord_Y[j] << endl;
+			//cout << coord_X[j] << " " << polynomial_Y[j] << endl;
+			//dataFile << coord_X[j] << " " << coord_Y[j] << endl;
+			dataFile << i << " " << polynomial_Y[j]  << endl;
 		}
 	}
 	dataFile.close();
+
+	std::ofstream gnuplot("sd.gp");
+	gnuplot << "set grid\n";
+	gnuplot << "set title 'График интерполяции кубическими сплайнами'\n";
+	gnuplot << "set xlabel 'x'\n";
+	gnuplot << "set ylabel 'y'\n";
+	gnuplot << "plot 'spline_coordinates.txt' with lines title 'Pn'\n"; 
+	//gnuplot << "plot 'spline_coordinates.txt'  using 1:2 with lines title 'Pn', 'spline_coordinates.txt' using 1:3 with lines title 'y(x)'\n";
+
+	gnuplot.close();
+	system("gnuplot -p sd.gp");
 }*/

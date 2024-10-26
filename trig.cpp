@@ -9,7 +9,9 @@ int main() {
 
 	
 	//dataFile2.open("trig_delta.txt");
-	for (int n = 1; n <= 100; ++n) {
+
+	dataFile.open("func_fnt.txt");
+	for (double n = 1000; n <= 1000; ++n) {
 		vector <double> t(2 * n + 2);
 		t[0] = 0;
 		for (int i = 1; i <= 2 * n + 1; i++) {
@@ -26,7 +28,7 @@ int main() {
 		vector <double> ak(n + 1);
 		vector <double> bk(n + 1);
 
-		for (int j = 1; j <= n; j++) {
+		for (double j = 1; j <= n; j++) {
 			double suma = 0;
 			double sumb = 0;
 			for (int i = 1; i <= 2 * n + 1; i++) {
@@ -40,10 +42,9 @@ int main() {
 		int index = 0;
 		double delta = 0;
 		double maxdelta = 0;
-		dataFile.open("func_fnt.txt");
-		for (double j = 0; j <= t[2 * n + 1]; j += 2 * M_PI / 1e5) { //до t[2*n+1]
+		for (double j = 3.557; j <= 3.5589; j += 2*M_PI/ 1e5) { //до t[2*n+1]
 			double fnt = A0;
-			for (int i = 1; i <= n; i++) {
+			for (double i = 1; i <= n; i++) {
 				fnt += ak[i] * cos(i * j) + bk[i] * sin(i * j);
 			}
 			//double gt = func1(j);
@@ -55,11 +56,11 @@ int main() {
 			index = n;
 			break;
 		}
-		dataFile.close();
+		//dataFile.close();
 		cout << "delta[" << n << "] = " << maxdelta << "\n";
 		//dataFile2<< maxdelta << "\n";
 	}
-	//dataFile.close();
+	dataFile.close();
 	//dataFile2.close();
 
 	std::ofstream gnuplot("sd.gp");
